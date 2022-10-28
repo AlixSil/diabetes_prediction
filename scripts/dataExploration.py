@@ -25,6 +25,8 @@ print("-"*20)
 print("Number unique values")
 print(diabetes_raw.nunique())
 
+diabetes_raw = diabetes_raw.drop_duplicates()
+
 ###############################
 ###Checking for missing data###
 ###############################
@@ -36,16 +38,39 @@ print("-"*20)
 print("Missing data")
 print(number_na_per_column)
 
-###########################################
-###Features variability and correlations###
-###########################################
-
 ##Transforming binary features into boolean class (except gender for clarity)
 numerical_features = "age"
 categorical_features = "gender"
 features_to_change  = { k:"bool" for k in diabetes_raw.columns if not(k in (numerical_features + categorical_features))}
 diabetes_df = diabetes_raw.astype(features_to_change)
 categorical_features = [c for c in diabetes_raw.columns if not (c in numerical_features)]
+
+##########################
+###Feature distribution###
+##########################
+categorical_df = diabetes_df[categorical_features]
+categorical_long = pd.melt(categorical_df , value_vars = categorical_features)
+categorical_long = categorical_long.groupby(["variable", "value"]).size().reset_index()
+categorical_long = categorical_long.rename(columns={0:'Number', "value":""})
+
+plt.figure()
+g = sns.FacetGrid(categorical_long, col="variable", hue = "", col_wrap=4)
+g.map(sns.barplot, "","Number", order=["Male", "Female", True, False])
+g.fig.subplots_adjust(top=0.9)
+g.fig.suptitle("Categorical Features distribution")
+g.add_legend()
+plt.savefig("Images/categoricalFeaturesDistribution.png", bbox_inches = "tight")
+
+
+numerical_df = diabetes_df[numerical_features]
+plt.figure()
+ax = sns.displot(numerical_df, binwidth = 1)
+plt.title("Distribution of numerical features")
+plt.savefig("Images/numericalFeaturesDistribution.png", bbox_inches = "tight")
+
+###########################################
+###Features variability and correlations###
+###########################################
 
 ##Computing Cramer's V (based on chisquare) to our categorical variables
 
@@ -95,3 +120,18 @@ ax.set_ylabel('')
 ax.set_xlabel('')
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 plt.savefig("Images/cramersVrelationship.png", bbox_inches = "tight")
+
+## Output contigency table of polyuria and polydipsia with class
+pd.crosstab(diabetes_df.loc[:,"class"], diabetes_df.polyuria)
+
+
+##Numerical features
+age_relationship = diabetes_df.melt(id_vars = "age")
+age_relationship = age_relationship.rename(columns = {'value' : ""})
+plt.figure()
+g = sns.FacetGrid(age_relationship, col="variable", hue = "", col_wrap=4)
+g.map(sns.histplot, "age", alpha = 0.5)
+g.fig.subplots_adjust(top=0.9)
+g.fig.suptitle("Age distribution relative other features")
+g.add_legend()
+plt.savefig("Images/AgeDistributionRelative.png", bbox_inches = "tight")
