@@ -78,3 +78,15 @@ As expected from our data analysis, polyuria and polydipsia are early nodes (the
 In this part, I want to compare the accuracy results of random forest, XGBoost and LCE on this dataset. As well as see which measure of accuracy we can get.
 
 For comparison with the DecisionTree classifier, the train test split will be kept the same.
+
+Important note : in production conditions, "Accuracy on test dataset" shouldn't be considered, as iteration to improve it would lead to overfitting.
+
+|                                | Random Forest | XGBoost  | LCE       |
+|--------------------------------|---------------|----------|-----------|
+| mean Cross Validation accuracy | 0.935         | 0.93     | 0.93      |
+| Time for fit (s)               | 0.099149      | 0.036313 | 71.038782 |
+| Accuracy on test dataset       | 0.941176      | 0.921569 | 0.941176  |
+
+On this specific dataset, on our limited number of parameters observed, and with those specific random seeds, cross validation would have lead us to choose random forest, leading to a final accuracy of 94%.
+
+LCE is at minimum comparable to Random Forest and XGBoost. But it has to be pointed out that on my personal material and with this dataset, it is way longer to fit.

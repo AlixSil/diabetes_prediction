@@ -50,12 +50,9 @@ print("optimal parameters are {}".format(optimal_parameters))
 
 
 ##Now that we have the optimal parameters, we fit a decision tree on the totality of the train set and evaluate it
-final_model = DecisionTreeClassifier(**optimal_parameters, random_state=0)
-final_model.fit(X_train,y_train)
-X_test_predict =final_model.predict(X_test)
-y_train = y_train
+X_test_predict =grid_search.predict(X_test)
 contigency_table = pd.crosstab(X_test_predict, y_test, rownames = ["predicted values"], colnames = ["true values"])
-final_accuracy = final_model.score(X_test, y_test)
+final_accuracy = X_test_predict.score(X_test, y_test)
 
 plt.figure()
 plot_tree(final_model, feature_names = X_test.columns, class_names = ["non-diabetic", "diabetic"])
