@@ -56,3 +56,25 @@ Those variables are clearly useful, but will not be enough for the level of prec
 
 Nothing much to say here, age does not seems to have a to high correlation with any other. It also seems nt very informative on class.
 We could test this more precisely (by example using a wilcoxon test), but this will not change the preditcion tasks.
+
+
+## Clinical diagnostic (Decision Tree)
+The aim of this part is to create and evaluate a decision tree easily usable in the clinical context, that a health professional could understand and possibly adapt based on non represented variables.
+
+We will separate data into train which will be used to fit the model (using cross validation to explore several parameters) and show the results on the tested data.
+
+Note on the scoring system : in a real application environment, the scoring would be adapted to the planned utilisation of the test. For example, if the test was to be deployed for any single human on earth, and the treatment was instensive, we would choose a measurment that would keep the False Positive Rate low. This decision of what scoring system to use should be taken with professional of the field, and with care.
+
+Here we will use the default (accuracy), but the ideally we should adapt it to the problem.
+
+### Results
+Under the rough constraint of a human easily usable algorithm (even our best parameters search was constrained, for example not exploring beyond 15 leaf nodes.) We obtain the following algorithm that yields an accuracy of 88%.
+
+![Decision tree classifier](Images/tree.png)
+
+As expected from our data analysis, polyuria and polydipsia are early nodes (they are very discriminatory)
+
+## Full classification
+In this part, I want to compare the accuracy results of random forest, XGBoost and LCE on this dataset. As well as see which measure of accuracy we can get.
+
+For comparison with the DecisionTree classifier, the train test split will be kept the same.
