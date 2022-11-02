@@ -9,8 +9,7 @@ It will include a description of the data, its characteristics as well as two ty
 ## Description of data
 Raw data countains 520 rows and 17 different observations.
 
-Note that several rows are duplicate of each others. There is only 251 unique rows. Each row is duplicated at least once.
-Although it might be due to several patients having exactly the same profile. As this cannot be checked, the duplicates will be removed and following statistics will be outputed only on the prunned dataset.
+Note that several rows are duplicate of each others. There is only 251 unique rows. Each row is duplicated at least once. This is a nature of these features, so duplicates row will not be deleted.
 
 No missing data in the dataset.
 
@@ -38,15 +37,15 @@ As class is our target feature, looking at their contigency table might be of in
 |       | Polyuria |       |      |
 |-------|----------|-------|------|
 | Class |          | False | True |
-|       | False    | 73    | 5    |
-|       | True     | 46    | 127  |
+|       | False    | 185   | 15   |
+|       | True     | 77    | 243  |
 
 
 |       | Polydipsia |       |      |
 |-------|------------|-------|------|
 | Class |            | False | True |
-|       | False      | 74    | 4    |
-|       | True       | 53    | 120  |
+|       | False      | 192   | 8    |
+|       | True       | 95    | 225  |
 
 
 Those variables are clearly useful, but will not be enough for the level of precision we are looking to obtain. These variables are also not close enough between themselves to consider removing one.
@@ -68,7 +67,7 @@ Note on the scoring system : in a real application environment, the scoring woul
 Here we will use the default (accuracy), but the ideally we should adapt it to the problem.
 
 ### Results
-Under the rough constraint of a human easily usable algorithm (even our best parameters search was constrained, for example not exploring beyond 15 leaf nodes.) We obtain the following algorithm that yields an accuracy of 88%.
+Under the rough constraint of a human easily usable algorithm (even our best parameters search was constrained, for example not exploring beyond 15 leaf nodes.) We obtain the following algorithm that yields an accuracy of 91%.
 
 ![Decision tree classifier](Images/tree.png)
 
@@ -81,12 +80,12 @@ For comparison with the DecisionTree classifier, the train test split will be ke
 
 Important note : in production conditions, "Accuracy on test dataset" shouldn't be considered, as iteration to improve it would lead to overfitting.
 
-|                                | Random Forest | XGBoost  | LCE       |
-|--------------------------------|---------------|----------|-----------|
-| mean Cross Validation accuracy | 0.935         | 0.93     | 0.93      |
-| Time for fit (s)               | 0.099149      | 0.036313 | 71.038782 |
-| Accuracy on test dataset       | 0.941176      | 0.921569 | 0.941176  |
+|                                | Random Forest | XGBoost  | LCE        |
+|--------------------------------|---------------|----------|------------|
+| mean Cross Validation accuracy | 0.966437      | 0.952008 | 0.954389   |
+| Time for fit (s)               | 0.060462      | 0.263918 | 151.982173 |
+| Accuracy on test dataset       | 0.971154      | 0.971154 | 0.961538   |
 
-On this specific dataset, on our limited number of parameters observed, and with those specific random seeds, cross validation would have lead us to choose random forest, leading to a final accuracy of 94%.
+On this specific dataset, on our limited number of parameters explored, and with those specific random seeds, cross validation would have lead us to choose random forest, leading to a final accuracy of 97.1%.
 
-LCE is at minimum comparable to Random Forest and XGBoost. But it has to be pointed out that on my personal material and with this dataset, it is way longer to fit.
+LCE is at minimum comparable to Random Forest and XGBoost. But it has to be pointed out that on my personal material and with this dataset, it is way longer to fit, and hence way longer to explore the parameter space. On a tight deadline and with limited hardware XGBoost or Random Forest are probably preferable.
